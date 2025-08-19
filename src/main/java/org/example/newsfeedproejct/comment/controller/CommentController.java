@@ -23,4 +23,10 @@ public class CommentController {
     public CommentUpdateDto.Response updateComment(@SessionAttribute("LOGIN_USER") Long userId, @PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId, @RequestBody CommentUpdateDto.Request commentUpdateDto) {
         return commentService.updateComment(userId, boardId, commentId, commentUpdateDto.getContent());
     }
+
+    @DeleteMapping("/boards/{boardId}/comments/{commentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteComment(@SessionAttribute("LOGIN_USER") Long userId, @PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId) {
+        commentService.deleteComment(userId, boardId, commentId);
+    }
 }
