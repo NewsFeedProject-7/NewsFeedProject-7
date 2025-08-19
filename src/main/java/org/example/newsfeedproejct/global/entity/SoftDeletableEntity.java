@@ -1,4 +1,4 @@
-package org.example.newsfeedproejct.global;
+package org.example.newsfeedproejct.global.entity;
 
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package org.example.newsfeedproejct.global;
+package org.example.newsfeedproejct.global.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
