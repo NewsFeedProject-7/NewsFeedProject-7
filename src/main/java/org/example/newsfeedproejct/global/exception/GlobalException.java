@@ -1,14 +1,15 @@
 package org.example.newsfeedproejct.global.exception;
 
 import lombok.Getter;
+import org.example.newsfeedproejct.global.exception.errorcode.ErrorCode;
 
 @Getter
 public class GlobalException extends RuntimeException {
 
-    private final ErrorType errorType;
-    public GlobalException(ErrorType errorType) {
-        super(errorType.getMessage());
-        this.errorType = errorType;
+    private final ErrorCode errorCode;
+    public GlobalException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
     }
 
 }

@@ -1,8 +1,8 @@
-package org.example.newsfeedproejct.global.exception;
+package org.example.newsfeedproejct.global.exception.errorcode;
 
 import org.springframework.http.HttpStatus;
 
-public interface ErrorType {
+public interface ErrorCode {
     HttpStatus getHttpStatus();
     String getCode();
     String getMessage();

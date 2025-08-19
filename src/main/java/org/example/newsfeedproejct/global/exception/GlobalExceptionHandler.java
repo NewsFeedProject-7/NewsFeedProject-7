@@ -2,6 +2,8 @@ package org.example.newsfeedproejct.global.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.newsfeedproejct.global.dto.ErrorResponseDto;
+import org.example.newsfeedproejct.global.exception.errorcode.CommonErrorCode;
+import org.example.newsfeedproejct.global.exception.errorcode.ErrorCode;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -19,14 +21,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(GlobalException.class)
     public ResponseEntity<ErrorResponseDto> handleGlobalException(GlobalException ex, HttpServletRequest request) {
-        ErrorType errorType = ex.getErrorType();
+        ErrorCode errorCode = ex.getErrorCode();
         return ResponseEntity
-                .status(errorType.getHttpStatus())
+                .status(errorCode.getHttpStatus())
                 .body(
                         ErrorResponseDto.of(
-                                errorType.getHttpStatus().value(),
-                                errorType.getCode(),
-                                errorType.getMessage(),
+                                errorCode.getHttpStatus().value(),
+                                errorCode.getCode(),
+                                errorCode.getMessage(),
                                 request.getRequestURI()
                         )
                 );

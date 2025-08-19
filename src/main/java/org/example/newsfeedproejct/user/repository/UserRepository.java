@@ -1,5 +1,7 @@
 package org.example.newsfeedproejct.user.repository;
 
+import org.example.newsfeedproejct.global.exception.GlobalException;
+import org.example.newsfeedproejct.global.exception.errorcode.UserErrorCode;
 import org.example.newsfeedproejct.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     default User findByIdOrElseThrow(Long id) {
 
-        return findByIdAndDeletedAtIsNull(id).orElseThrow(() -> new RuntimeException("존재하지 않거나 회원탈퇴한 유저입니다."));
+        return findByIdAndDeletedAtIsNull(id).orElseThrow(() -> new GlobalException(UserErrorCode.USER_NOT_FOUND));
     }
 
 }
