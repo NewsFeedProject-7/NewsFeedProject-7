@@ -55,6 +55,6 @@ public class CommentService {
         if(!comment.getUser().getId().equals(userId)){
             throw new GlobalException(CommentErrorCode.COMMENT_NOT_OWNER);
         }
-        commentRepository.delete(comment);
+        comment.softDelete();
     }
 }
