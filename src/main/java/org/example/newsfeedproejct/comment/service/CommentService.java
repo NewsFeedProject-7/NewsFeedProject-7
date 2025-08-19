@@ -45,4 +45,16 @@ public class CommentService {
         commentRepository.flush();
         return CommentUpdateDto.Response.from(comment);
     }
+
+    @Transactional
+    public void deleteComment(Long userId, Long boardId, Long commentId){
+        Comment comment = commentRepository.findByIdOrElseThrow(commentId);
+        if(!comment.getBoard().getId().equals(boardId)){
+            throw new GlobalException(CommentErrorCode.COMMENT_BOARD_MISMATCH);
+        }
+        if(!comment.getUser().getId().equals(userId)){
+            throw new GlobalException(CommentErrorCode.COMMENT_NOT_OWNER);
+        }
+        commentRepository.delete(comment);
+    }
 }
