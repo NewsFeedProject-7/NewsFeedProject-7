@@ -2,8 +2,8 @@ package org.example.newsfeedproejct.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import org.example.newsfeedproejct.user.validation.annotation.ValidPassword;
 
 public class UserSignUpDto {
 
@@ -14,8 +14,7 @@ public class UserSignUpDto {
         @Email(message = "이메일 형식이 아닙니다.")
         private String email;
 
-        @NotBlank(message = "비밀번호는 필수값입니다.")
-        @Size(min = 4, message = "비밀번호는 최소 4자 이상이어야 합니다.")
+        @ValidPassword
         private String password;
 
         private String confirmPassword;
