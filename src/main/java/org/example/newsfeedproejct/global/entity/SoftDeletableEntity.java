@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 @Getter
 public class SoftDeletableEntity extends BaseEntity {
 
-    private LocalDateTime deleted_At;
+    private LocalDateTime deletedAt;
 
     public void softDelete() {
-        this.deleted_At = LocalDateTime.now();
+        this.deletedAt = LocalDateTime.now();
     }
 
 }
