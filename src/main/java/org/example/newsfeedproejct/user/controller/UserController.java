@@ -1,7 +1,11 @@
 package org.example.newsfeedproejct.user.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeedproejct.global.consts.Const;
+import org.example.newsfeedproejct.user.dto.UserLoginDto;
 import org.example.newsfeedproejct.user.dto.UserSignUpDto;
 import org.example.newsfeedproejct.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -28,6 +32,22 @@ public class UserController {
                 requestDto.getPassword(),
                 requestDto.getConfirmPassword()
         );
+    }
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public void login(
+            @Valid @RequestBody UserLoginDto.Request requestDto,
+            HttpServletRequest httpRequest
+    ) {
+
+        UserLoginDto.Response userLoginResponseDto = userService.login(
+                requestDto.getEmail(),
+                requestDto.getPassword()
+        );
+
+        HttpSession session = httpRequest.getSession();
+        session.setAttribute(Const.LOGIN_USER, userLoginResponseDto.getId());
     }
 
 }

@@ -15,9 +15,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByIdAndDeletedAtIsNull(Long id);
 
+    Optional<User> findByEmailAndDeletedAtIsNull(String email);
+
     default User findByIdOrElseThrow(Long id) {
 
         return findByIdAndDeletedAtIsNull(id).orElseThrow(() -> new GlobalException(UserErrorCode.USER_NOT_FOUND));
+    }
+
+    default User findByEmailOrElseThrow(String email) {
+
+        return findByEmailAndDeletedAtIsNull(email).orElseThrow(() -> new GlobalException(UserErrorCode.INVALID_EMAIL));
     }
 
 }
