@@ -14,19 +14,19 @@ public class CommentController {
 
     @PostMapping("/boards/{boardId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentCreateDto.Response createComment(@SessionAttribute("LOGIN_USER") Long userId, @PathVariable("boardId") Long boardId, @RequestBody CommentCreateDto.Request commentCreateDto) {
-        return commentService.createComment(userId, boardId, commentCreateDto.getContent());
+    public CommentCreateDto.Response createComment(@SessionAttribute("LOGIN_USER") Long loginUserId, @PathVariable("boardId") Long boardId, @RequestBody CommentCreateDto.Request commentCreateDto) {
+        return commentService.createComment(loginUserId, boardId, commentCreateDto.getContent());
     }
 
     @PatchMapping("/boards/{boardId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public CommentUpdateDto.Response updateComment(@SessionAttribute("LOGIN_USER") Long userId, @PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId, @RequestBody CommentUpdateDto.Request commentUpdateDto) {
-        return commentService.updateComment(userId, boardId, commentId, commentUpdateDto.getContent());
+    public CommentUpdateDto.Response updateComment(@SessionAttribute("LOGIN_USER") Long loginUserId, @PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId, @RequestBody CommentUpdateDto.Request commentUpdateDto) {
+        return commentService.updateComment(loginUserId, boardId, commentId, commentUpdateDto.getContent());
     }
 
     @DeleteMapping("/boards/{boardId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteComment(@SessionAttribute("LOGIN_USER") Long userId, @PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId) {
-        commentService.deleteComment(userId, boardId, commentId);
+    public void deleteComment(@SessionAttribute("LOGIN_USER") Long loginUserId, @PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId) {
+        commentService.deleteComment(loginUserId, boardId, commentId);
     }
 }
