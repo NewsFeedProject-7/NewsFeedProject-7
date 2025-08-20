@@ -65,9 +65,9 @@ public class UserController {
         return userService.updateUser(
                 userId,
                 loginUserId,
-                requestDto.getNickname(),
+                requestDto.getNewNickname(),
                 requestDto.getCurrentPassword(),
-                requestDto.getChangePassword(),
+                requestDto.getNewPassword(),
                 requestDto.getConfirmPassword()
         );
     }

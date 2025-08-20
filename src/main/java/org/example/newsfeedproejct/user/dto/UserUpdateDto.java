@@ -16,13 +16,13 @@ public class UserUpdateDto {
     public static class Request {
 
         @ValidNickname
-        private String nickname;
+        private String newNickname;
 
         @NotBlank(message = "본인확인용 비밀번호는 필수값입니다.")
         private String currentPassword;
 
         @ValidPassword
-        private String changePassword;
+        private String newPassword;
 
         private String confirmPassword;
     }

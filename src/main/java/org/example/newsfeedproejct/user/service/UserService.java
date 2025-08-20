@@ -8,6 +8,7 @@ import org.example.newsfeedproejct.user.dto.UserLoginDto;
 import org.example.newsfeedproejct.user.dto.UserUpdateDto;
 import org.example.newsfeedproejct.user.dto.UserSearchDetailDto;
 import org.example.newsfeedproejct.user.entity.User;
+import org.example.newsfeedproejct.user.policy.UserPolicy;
 import org.example.newsfeedproejct.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserPolicy userPolicy;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -72,57 +74,25 @@ public class UserService {
     public UserUpdateDto.Response updateUser(
             Long userId,
             Long loginUserId,
-            String nickname,
+            String newNickname,
             String currentPassword,
-            String changePassword,
+            String newPassword,
             String confirmPassword
     ) {
 
         User findUser = userRepository.findByIdOrElseThrow(userId);
 
         // 본인의 정보만 수정 가능
-        if (false == ObjectUtils.nullSafeEquals(findUser.getId(), loginUserId)) {
-            throw new GlobalException(UserErrorCode.UNAUTHORIZED_UPDATE);
-        }
+        userPolicy.checkOwnerOrThrow(findUser, loginUserId);
 
         // 본인확인용 비밀번호 확인
-        if (false == passwordEncoder.matches(currentPassword, findUser.getPassword())) {
-            throw new GlobalException(UserErrorCode.CURRENT_PASSWORD_NOT_MATCHED);
-        }
+        userPolicy.checkCurrentPasswordOrThrow(findUser, currentPassword);
 
         // 비밀번호 값이 있다면 업데이트
-        boolean hasPassword = StringUtils.hasText(changePassword);
-        boolean hasConfirmPassword = StringUtils.hasText(confirmPassword);
-
-        if (hasPassword || hasConfirmPassword) {
-            if (false == (hasPassword && hasConfirmPassword)) {
-                throw new GlobalException(UserErrorCode.INVALID_PASSWORD_INPUT);
-            }
-
-            if (passwordEncoder.matches(changePassword, findUser.getPassword())) {
-                throw new GlobalException(UserErrorCode.SAME_AS_OLD_PASSWORD);
-            }
-
-            if (false == ObjectUtils.nullSafeEquals(changePassword, confirmPassword)) {
-                throw new GlobalException(UserErrorCode.CONFIRM_PASSWORD_NOT_MATCHED);
-            }
-
-            String encodedPassword = passwordEncoder.encode(changePassword);
-            findUser.updatePassword(encodedPassword);
-        }
+        applyPasswordChange(findUser, newPassword, confirmPassword);
 
         // 닉네임 값이 있다면 업데이트
-        boolean hasNickname = StringUtils.hasText(nickname);
-
-        if (hasNickname) {
-            if (userRepository.existsByNicknameAndIdNot(nickname, findUser.getId())) {
-                throw new GlobalException(UserErrorCode.DUPLICATE_NICKNAME);
-            }
-
-            if (false == ObjectUtils.nullSafeEquals(nickname, findUser.getNickname())) {
-                findUser.updateNickname(nickname);
-            }
-        }
+        applyNicknameChange(findUser, newNickname);
 
         userRepository.flush();
 
@@ -139,15 +109,47 @@ public class UserService {
         User findUser = userRepository.findByIdOrElseThrow(userId);
 
         // 본인의 계정만 삭제 가능
-        if (false == ObjectUtils.nullSafeEquals(findUser.getId(), loginUserId)) {
-            throw new GlobalException(UserErrorCode.UNAUTHORIZED_DELETE);
-        }
+        userPolicy.checkOwnerOrThrow(findUser, loginUserId);
 
         // 본인확인용 비밀번호 확인
-        if (false == passwordEncoder.matches(currentPassword, findUser.getPassword())) {
-            throw new GlobalException(UserErrorCode.CURRENT_PASSWORD_NOT_MATCHED);
-        }
+        userPolicy.checkCurrentPasswordOrThrow(findUser, currentPassword);
 
         findUser.softDelete();
+    }
+
+    private void applyPasswordChange(User user, String newPassword, String confirmPassword) {
+        boolean hasPassword = StringUtils.hasText(newPassword);
+        boolean hasConfirmPassword = StringUtils.hasText(confirmPassword);
+
+        if (hasPassword || hasConfirmPassword) {
+            if (false == (hasPassword && hasConfirmPassword)) {
+                throw new GlobalException(UserErrorCode.INVALID_PASSWORD_INPUT);
+            }
+
+            if (passwordEncoder.matches(newPassword, user.getPassword())) {
+                throw new GlobalException(UserErrorCode.SAME_AS_OLD_PASSWORD);
+            }
+
+            if (false == ObjectUtils.nullSafeEquals(newPassword, confirmPassword)) {
+                throw new GlobalException(UserErrorCode.CONFIRM_PASSWORD_NOT_MATCHED);
+            }
+
+            String encodedPassword = passwordEncoder.encode(newPassword);
+            user.updatePassword(encodedPassword);
+        }
+    }
+
+    private void applyNicknameChange(User user, String newNickname) {
+        boolean hasNickname = StringUtils.hasText(newNickname);
+
+        if (hasNickname) {
+            if (userRepository.existsByNicknameAndIdNot(newNickname, user.getId())) {
+                throw new GlobalException(UserErrorCode.DUPLICATE_NICKNAME);
+            }
+
+            if (false == ObjectUtils.nullSafeEquals(newNickname, user.getNickname())) {
+                user.updateNickname(newNickname);
+            }
+        }
     }
 }
