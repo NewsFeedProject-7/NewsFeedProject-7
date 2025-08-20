@@ -12,11 +12,13 @@ public class UserSearchDetailDto {
         @JsonInclude(JsonInclude.Include.NON_NULL)
         private final String email;
         private final String nickname;
+        private final Boolean isFollowing;
 
         public static Response from(User user) {
             return Response.builder()
                     .email(user.getEmail())
                     .nickname(user.getNickname())
+                    .isFollowing(null)
                     .build();
 
         }
