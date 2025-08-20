@@ -1,6 +1,7 @@
 package org.example.newsfeedproejct.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeedproejct.follow.repository.FollowRepository;
 import org.example.newsfeedproejct.global.config.PasswordEncoder;
 import org.example.newsfeedproejct.global.exception.GlobalException;
 import org.example.newsfeedproejct.global.exception.errorcode.UserErrorCode;
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final FollowRepository followRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -61,9 +63,13 @@ public class UserService {
         if (userId.equals(loginUserId)) {
             return UserSearchDetailDto.Response.from(foundUser);
         } else {
+
+            boolean isFollowing = followRepository.existsByFollowerIdAndFollowingId(loginUserId, userId);
+
             return UserSearchDetailDto.Response.builder()
                     .nickname(foundUser.getNickname())
                     .email(null)
+                    .isFollowing(isFollowing)
                     .build();
         }
     }
