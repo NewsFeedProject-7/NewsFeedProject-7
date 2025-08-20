@@ -1,5 +1,6 @@
 package org.example.newsfeedproejct.comment.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedproejct.comment.dto.CommentCreateDto;
 import org.example.newsfeedproejct.comment.dto.CommentUpdateDto;
@@ -14,13 +15,13 @@ public class CommentController {
 
     @PostMapping("/boards/{boardId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentCreateDto.Response createComment(@SessionAttribute("LOGIN_USER") Long loginUserId, @PathVariable("boardId") Long boardId, @RequestBody CommentCreateDto.Request commentCreateDto) {
+    public CommentCreateDto.Response createComment(@SessionAttribute("LOGIN_USER") Long loginUserId, @PathVariable("boardId") Long boardId, @RequestBody @Valid CommentCreateDto.Request commentCreateDto) {
         return commentService.createComment(loginUserId, boardId, commentCreateDto.getContent());
     }
 
     @PatchMapping("/boards/{boardId}/comments/{commentId}")
     @ResponseStatus(HttpStatus.OK)
-    public CommentUpdateDto.Response updateComment(@SessionAttribute("LOGIN_USER") Long loginUserId, @PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId, @RequestBody CommentUpdateDto.Request commentUpdateDto) {
+    public CommentUpdateDto.Response updateComment(@SessionAttribute("LOGIN_USER") Long loginUserId, @PathVariable("boardId") Long boardId, @PathVariable("commentId") Long commentId, @RequestBody @Valid CommentUpdateDto.Request commentUpdateDto) {
         return commentService.updateComment(loginUserId, boardId, commentId, commentUpdateDto.getContent());
     }
 
