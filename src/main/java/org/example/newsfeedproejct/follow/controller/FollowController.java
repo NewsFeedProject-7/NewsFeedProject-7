@@ -19,20 +19,20 @@ public class FollowController {
     private final FollowService followService;
     private final UserRepository userRepository;
 
-    @PostMapping("/users/{userId}/following")
+    @PostMapping("/following/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void followUser(@PathVariable Long userId, @SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
         followService.follow(loginUserId, userId);
     }
 
-    @DeleteMapping("/users/{userId}/following")
+    @DeleteMapping("/following/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unfollowUser(@PathVariable Long userId, @SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
         followService.unfollow(loginUserId, userId);
     }
 
     //팔로잉 목록 조회 API
-    @GetMapping("/users/{userId}/following")
+    @GetMapping("/following/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public List<FollowResponseDto> getFollowingList(@PathVariable Long userId) {
         //userId가 팔로우하는 목록 가져옴
