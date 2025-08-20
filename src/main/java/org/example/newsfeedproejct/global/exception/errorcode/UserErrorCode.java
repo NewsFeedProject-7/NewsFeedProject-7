@@ -17,8 +17,9 @@ public enum UserErrorCode implements ErrorCode {
     INVALID_EMAIL(HttpStatus.UNAUTHORIZED, "USER-005", "이메일이 올바르지 않습니다."),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "USER-006", "비밀번호가 올바르지 않습니다."),
     UNAUTHORIZED_UPDATE(HttpStatus.FORBIDDEN, "USER-007", "다른 유저의 정보를 수정할 수 없습니다."),
-    SAME_AS_OLD_PASSWORD(HttpStatus.BAD_REQUEST, "USER-008", "현재 비밀번호와 동일한 비밀번호로는 변경할 수 없습니다."),
-    INVALID_PASSWORD_INPUT(HttpStatus.BAD_REQUEST, "USER-009", "비밀번호와 비밀번호 확인을 모두 입력해주세요.");
+    UNAUTHORIZED_DELETE(HttpStatus.FORBIDDEN, "USER-008", "다른 유저의 정보를 삭제할 수 없습니다."),
+    SAME_AS_OLD_PASSWORD(HttpStatus.BAD_REQUEST, "USER-009", "현재 비밀번호와 동일한 비밀번호로는 변경할 수 없습니다."),
+    INVALID_PASSWORD_INPUT(HttpStatus.BAD_REQUEST, "USER-010", "비밀번호와 비밀번호 확인을 모두 입력해주세요.");
 
     private final HttpStatus httpStatus;
     private final String code;

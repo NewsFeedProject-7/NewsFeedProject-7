@@ -128,4 +128,26 @@ public class UserService {
 
         return UserUpdateDto.Response.from(findUser);
     }
+
+    @Transactional
+    public void deleteUser(
+            Long userId,
+            Long loginUserId,
+            String currentPassword
+    ) {
+
+        User findUser = userRepository.findByIdOrElseThrow(userId);
+
+        // 본인의 계정만 삭제 가능
+        if (false == ObjectUtils.nullSafeEquals(findUser.getId(), loginUserId)) {
+            throw new GlobalException(UserErrorCode.UNAUTHORIZED_DELETE);
+        }
+
+        // 본인확인용 비밀번호 확인
+        if (false == passwordEncoder.matches(currentPassword, findUser.getPassword())) {
+            throw new GlobalException(UserErrorCode.CURRENT_PASSWORD_NOT_MATCHED);
+        }
+
+        findUser.softDelete();
+    }
 }
