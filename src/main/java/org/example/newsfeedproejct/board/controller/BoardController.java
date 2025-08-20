@@ -21,7 +21,7 @@ public class BoardController {
     // 피드 생성
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BoardCreateDto.Response createBoard(@RequestBody BoardCreateDto.Request requestDto,
+    public BoardCreateDto.Response createBoard(@Valid @RequestBody BoardCreateDto.Request requestDto,
                                                @SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
         return boardService.createBoard(loginUserId, requestDto.getSubject(), requestDto.getContent());
     }
@@ -48,5 +48,13 @@ public class BoardController {
                                                @Valid @RequestBody BoardUpdateDto.Request requestDto,
                                                @SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
         return boardService.updateBoard(id, loginUserId, requestDto.getSubject(), requestDto.getContent());
+    }
+
+    // 피드 삭제
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBoard(@PathVariable Long id,
+                            @SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
+        boardService.deleteBoard(id, loginUserId);
     }
 }

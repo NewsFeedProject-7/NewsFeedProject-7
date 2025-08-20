@@ -8,6 +8,7 @@ import org.example.newsfeedproejct.board.dto.BoardUpdateDto;
 import org.example.newsfeedproejct.board.entity.Board;
 import org.example.newsfeedproejct.board.repository.BoardRepository;
 import org.example.newsfeedproejct.comment.dto.CommentSearchDetailDto;
+import org.example.newsfeedproejct.comment.entity.Comment;
 import org.example.newsfeedproejct.comment.repository.CommentRepository;
 import org.example.newsfeedproejct.global.exception.GlobalException;
 import org.example.newsfeedproejct.global.exception.errorcode.BoardErrorCode;
@@ -68,6 +69,18 @@ public class BoardService {
             throw new GlobalException(BoardErrorCode.BOARD_UNAUTHORIZED);
         }
         findBoard.updateBoard(subject, content);
+        boardRepository.flush();
         return BoardUpdateDto.Response.from(findBoard);
+    }
+
+    public void deleteBoard(Long id, Long loginUserId) {
+        Board findBoard = boardRepository.findByIdOrElseThrow(id);
+        if (!findBoard.getUser().getId().equals(loginUserId)) {
+            throw new GlobalException(BoardErrorCode.BOARD_UNAUTHORIZED);
+        }
+        findBoard.softDelete();
+
+        List<Comment> comments = commentRepository.findAllByBoardIdOrderByCreatedAt(id);
+        comments.forEach(Comment::softDelete);
     }
 }

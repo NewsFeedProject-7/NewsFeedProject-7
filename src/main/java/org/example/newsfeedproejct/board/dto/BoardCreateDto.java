@@ -1,6 +1,7 @@
 package org.example.newsfeedproejct.board.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import org.example.newsfeedproejct.board.entity.Board;
@@ -12,6 +13,7 @@ public class BoardCreateDto {
     @Getter
     public static class Request {
         @NotBlank(message = "제목은 필수 입력 사항입니다.")
+        @Size(min = 1, max = 50, message = "제목은 50자 이내여야 합니다.")
         private final String subject;
 
         @NotBlank(message = "내용은 필수 입력 사항입니다.")

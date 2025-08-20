@@ -35,10 +35,10 @@ public class CommentService {
     @Transactional
     public CommentUpdateDto.Response updateComment(Long userId, Long boardId, Long commentId, String content) {
         Comment comment = commentRepository.findByIdOrElseThrow(commentId);
-        if(!comment.getBoard().getId().equals(boardId)){
+        if (!comment.getBoard().getId().equals(boardId)) {
             throw new GlobalException(CommentErrorCode.COMMENT_BOARD_MISMATCH);
         }
-        if(!comment.getUser().getId().equals(userId)){
+        if (!comment.getUser().getId().equals(userId)) {
             throw new GlobalException(CommentErrorCode.COMMENT_NOT_OWNER);
         }
         comment.updateContent(content);
@@ -47,12 +47,12 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long userId, Long boardId, Long commentId){
+    public void deleteComment(Long userId, Long boardId, Long commentId) {
         Comment comment = commentRepository.findByIdOrElseThrow(commentId);
-        if(!comment.getBoard().getId().equals(boardId)){
+        if (!comment.getBoard().getId().equals(boardId)) {
             throw new GlobalException(CommentErrorCode.COMMENT_BOARD_MISMATCH);
         }
-        if(!comment.getUser().getId().equals(userId)){
+        if (!comment.getUser().getId().equals(userId)) {
             throw new GlobalException(CommentErrorCode.COMMENT_NOT_OWNER);
         }
         comment.softDelete();
