@@ -2,6 +2,7 @@ package org.example.newsfeedproejct.board.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedproejct.board.dto.BoardCreateDto;
+import org.example.newsfeedproejct.board.dto.BoardSearchDetailDto;
 import org.example.newsfeedproejct.board.dto.BoardSearchDto;
 import org.example.newsfeedproejct.board.service.BoardService;
 import org.example.newsfeedproejct.global.consts.Const;
@@ -19,8 +20,8 @@ public class BoardController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BoardCreateDto.Response createBoard(@RequestBody BoardCreateDto.Request requestDto,
-                                               @SessionAttribute(Const.LOGIN_USER) Long userId) {
-        return boardService.createBoard(userId, requestDto.getSubject(), requestDto.getContent());
+                                               @SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
+        return boardService.createBoard(loginUserId, requestDto.getSubject(), requestDto.getContent());
     }
 
     // 피드 전체 조회
@@ -29,5 +30,12 @@ public class BoardController {
     public Page<BoardSearchDto.Response> searchBoards(@RequestParam(defaultValue = "0") int page,
                                                       @RequestParam(defaultValue = "10") int size) {
         return boardService.searchBoards(page, size);
+    }
+
+    // 피드 단건 조회
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public BoardSearchDetailDto.Response findById(@PathVariable Long id) {
+        return boardService.findById(id);
     }
 }
