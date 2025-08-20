@@ -32,11 +32,11 @@ public class FollowController {
     }
 
     //팔로잉 목록 조회 API
-    @GetMapping("/following/{userId}")
+    @GetMapping("/following")
     @ResponseStatus(HttpStatus.OK)
-    public List<FollowResponseDto> getFollowingList(@PathVariable Long userId) {
+    public List<FollowResponseDto> getFollowingList(@SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
         //userId가 팔로우하는 목록 가져옴
-        List<Long> followingIds = followService.getFollowingIds(userId);
+        List<Long> followingIds = followService.getFollowingIds(loginUserId);
         //가져온 ID목록 사용해서 User정보조회 및 DTO변환
         List<User> followingUsers = userRepository.findAllById(followingIds);
         return followingUsers.stream()
