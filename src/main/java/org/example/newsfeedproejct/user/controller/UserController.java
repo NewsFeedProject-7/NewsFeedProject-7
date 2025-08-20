@@ -55,8 +55,8 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public UserSearchDetailDto.Response findById(
             @PathVariable Long userId,
-            @SessionAttribute(Const.LOGIN_USER) Long currentUserId) {
-        return userService.findById(userId, currentUserId);
+            @SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
+        return userService.findById(userId, loginUserId);
     }
 
     @PatchMapping("/users/{userId}")
