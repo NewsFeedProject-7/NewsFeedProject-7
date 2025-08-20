@@ -21,6 +21,7 @@ public class Board extends SoftDeletableEntity {
     @Column(nullable = false)
     private String subject;
 
+    @Lob
     @Column(nullable = false)
     private String content;
 
