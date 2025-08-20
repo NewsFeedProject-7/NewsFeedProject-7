@@ -8,6 +8,7 @@ import org.example.newsfeedproejct.global.config.PasswordEncoder;
 import org.example.newsfeedproejct.global.entity.SoftDeletableEntity;
 import org.example.newsfeedproejct.global.exception.GlobalException;
 import org.example.newsfeedproejct.global.exception.errorcode.UserErrorCode;
+import org.springframework.util.ObjectUtils;
 
 @Getter
 @Entity
@@ -31,6 +32,11 @@ public class User extends SoftDeletableEntity {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
+    }
+
+    public boolean isOwnedBy(Long userId) {
+
+        return ObjectUtils.nullSafeEquals(this.id, userId);
     }
 
     public void verifyPasswordOrThrow(PasswordEncoder encoder, String rawPassword) {
