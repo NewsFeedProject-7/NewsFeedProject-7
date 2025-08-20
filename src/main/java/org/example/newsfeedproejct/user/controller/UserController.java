@@ -6,13 +6,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedproejct.global.consts.Const;
 import org.example.newsfeedproejct.user.dto.UserLoginDto;
+import org.example.newsfeedproejct.user.dto.UserSearchDetailDto;
 import org.example.newsfeedproejct.user.dto.UserSignUpDto;
 import org.example.newsfeedproejct.user.service.UserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,6 +46,12 @@ public class UserController {
 
         HttpSession session = httpRequest.getSession();
         session.setAttribute(Const.LOGIN_USER, userLoginResponseDto.getId());
+    }
+
+    @GetMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserSearchDetailDto.Response findById(@PathVariable Long userId) {
+        return userService.findById(userId);
     }
 
 }

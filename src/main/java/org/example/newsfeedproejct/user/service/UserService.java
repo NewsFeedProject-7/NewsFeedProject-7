@@ -5,6 +5,7 @@ import org.example.newsfeedproejct.global.config.PasswordEncoder;
 import org.example.newsfeedproejct.global.exception.GlobalException;
 import org.example.newsfeedproejct.global.exception.errorcode.UserErrorCode;
 import org.example.newsfeedproejct.user.dto.UserLoginDto;
+import org.example.newsfeedproejct.user.dto.UserSearchDetailDto;
 import org.example.newsfeedproejct.user.entity.User;
 import org.example.newsfeedproejct.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -50,5 +51,13 @@ public class UserService {
         return UserLoginDto.Response.builder()
                 .id(findUser.getId())
                 .build();
+    }
+
+    @Transactional
+    public UserSearchDetailDto.Response findById(Long userId) {
+        User findById = userRepository.findById(userId).orElseThrow(
+                () -> new GlobalException(UserErrorCode.USER_NOT_FOUND)
+        );
+        return new UserSearchDetailDto.Response(findById);
     }
 }
