@@ -53,11 +53,9 @@ public class UserController {
 
     @GetMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public UserSearchDetailDto.Response findById(@PathVariable Long userId, HttpSession session) {
-        Long currentUserId = (Long) session.getAttribute(Const.LOGIN_USER);
-        if (currentUserId == null) {
-            throw new GlobalException(CommonErrorCode.UNAUTHORIZED);
-        }
+    public UserSearchDetailDto.Response findById(
+            @PathVariable Long userId,
+            @SessionAttribute(Const.LOGIN_USER) Long currentUserId) {
         return userService.findById(userId, currentUserId);
     }
 
