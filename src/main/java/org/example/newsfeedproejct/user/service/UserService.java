@@ -55,7 +55,7 @@ public class UserService {
                 .build();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public UserSearchDetailDto.Response findById(Long userId, Long currentUserId) {
         User foundUser = userRepository.findByIdOrElseThrow(userId);
         if (userId.equals(currentUserId)) {
@@ -63,6 +63,7 @@ public class UserService {
         } else {
             return UserSearchDetailDto.Response.builder()
                     .nickname(foundUser.getNickname())
+                    .email(null)
                     .build();
         }
     }
