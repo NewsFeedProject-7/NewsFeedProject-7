@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedproejct.global.consts.Const;
+import org.example.newsfeedproejct.global.exception.GlobalException;
+import org.example.newsfeedproejct.global.exception.errorcode.CommonErrorCode;
 import org.example.newsfeedproejct.user.dto.UserLoginDto;
 import org.example.newsfeedproejct.user.dto.UserSearchDetailDto;
 import org.example.newsfeedproejct.user.dto.UserSignUpDto;
@@ -51,8 +53,12 @@ public class UserController {
 
     @GetMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public UserSearchDetailDto.Response findById(@PathVariable Long userId) {
-        return userService.findById(userId);
+    public UserSearchDetailDto.Response findById(@PathVariable Long userId, HttpSession session) {
+        Long currentUserId = (Long) session.getAttribute(Const.LOGIN_USER);
+        if (currentUserId == null) {
+            throw new GlobalException(CommonErrorCode.UNAUTHORIZED);
+        }
+        return userService.findById(userId, currentUserId);
     }
 
     @PatchMapping("/users/{userId}")
