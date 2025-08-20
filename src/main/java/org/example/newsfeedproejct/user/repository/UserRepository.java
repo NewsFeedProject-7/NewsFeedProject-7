@@ -27,4 +27,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
         return findByEmailAndDeletedAtIsNull(email).orElseThrow(() -> new GlobalException(UserErrorCode.INVALID_EMAIL));
     }
 
+    boolean existsByNicknameAndIdNot(String nickname, Long id);
 }

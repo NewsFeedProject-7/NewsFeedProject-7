@@ -8,7 +8,7 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null) return false;
+        if (value == null) return true;
         if (value.length() < 8) return false;
 
         boolean hasUpper = value.chars().anyMatch(Character::isUpperCase);

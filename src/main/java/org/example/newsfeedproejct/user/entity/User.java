@@ -39,4 +39,12 @@ public class User extends SoftDeletableEntity {
             throw new GlobalException(UserErrorCode.INVALID_PASSWORD);
         }
     }
+
+    public void updateNickname(String newNickname) {
+        this.nickname = newNickname;
+    }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }
