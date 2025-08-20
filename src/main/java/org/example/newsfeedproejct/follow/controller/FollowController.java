@@ -19,13 +19,13 @@ public class FollowController {
     private final FollowService followService;
     private final UserRepository userRepository;
 
-    @PostMapping("/users/{userId}/follow")
+    @PostMapping("/users/{userId}/following")
     @ResponseStatus(HttpStatus.CREATED)
     public void followUser(@PathVariable Long userId, @SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
         followService.follow(loginUserId, userId);
     }
 
-    @DeleteMapping("/users/{userId}/follow")
+    @DeleteMapping("/users/{userId}/following")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void unfollowUser(@PathVariable Long userId, @SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
         followService.unfollow(loginUserId, userId);
