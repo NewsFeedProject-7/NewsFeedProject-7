@@ -56,9 +56,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserSearchDetailDto.Response findById(Long userId, Long currentUserId) {
+    public UserSearchDetailDto.Response findById(Long userId, Long loginUserId) {
         User foundUser = userRepository.findByIdOrElseThrow(userId);
-        if (userId.equals(currentUserId)) {
+        if (userId.equals(loginUserId)) {
             return UserSearchDetailDto.Response.from(foundUser);
         } else {
             return UserSearchDetailDto.Response.builder()
