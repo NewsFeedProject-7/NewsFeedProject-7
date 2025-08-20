@@ -1,5 +1,6 @@
 package org.example.newsfeedproejct.board.dto;
 
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import org.example.newsfeedproejct.board.entity.Board;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 public class BoardUpdateDto {
     @Getter
     public static class Request {
+        @Size(max = 50, message = "제목은 50자 이내여야 합니다.")
         private final String subject;
         private final String content;
 
