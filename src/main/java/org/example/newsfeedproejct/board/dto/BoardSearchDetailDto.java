@@ -21,7 +21,6 @@ public class BoardSearchDetailDto {
         private final String nickname;
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
-        private final LocalDateTime deletedAt;
 
         private final List<CommentSearchDetailDto.Response> comments;
 
@@ -35,7 +34,6 @@ public class BoardSearchDetailDto {
                     .comments(comments)
                     .createdAt(board.getCreatedAt())
                     .updatedAt(board.getUpdatedAt())
-                    .deletedAt(board.getDeletedAt())
                     .build();
         }
     }
