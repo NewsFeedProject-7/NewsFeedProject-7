@@ -1,6 +1,8 @@
 package org.example.newsfeedproejct.user.controller;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -75,12 +77,26 @@ public class UserController {
     @DeleteMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(
+            HttpServletRequest httpRequest,
+            HttpServletResponse httpResponse,
             @PathVariable Long userId,
             @SessionAttribute(Const.LOGIN_USER) Long loginUserId,
             @Valid @RequestBody UserDeleteDto.Request requestDto
     ) {
 
         userService.deleteUser(userId, loginUserId, requestDto.getCurrentPassword());
+
+        // 세션 제거
+        HttpSession session = httpRequest.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        // 브라우저 쿠키 제거
+        Cookie cookie = new Cookie("JSESSIONID", null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        httpResponse.addCookie(cookie);
     }
 
 }
