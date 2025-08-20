@@ -5,12 +5,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.newsfeedproejct.global.consts.Const;
-import org.example.newsfeedproejct.global.exception.GlobalException;
-import org.example.newsfeedproejct.global.exception.errorcode.CommonErrorCode;
-import org.example.newsfeedproejct.user.dto.UserLoginDto;
-import org.example.newsfeedproejct.user.dto.UserSearchDetailDto;
-import org.example.newsfeedproejct.user.dto.UserSignUpDto;
-import org.example.newsfeedproejct.user.dto.UserUpdateDto;
+import org.example.newsfeedproejct.user.dto.*;
 import org.example.newsfeedproejct.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -75,6 +70,17 @@ public class UserController {
                 requestDto.getChangePassword(),
                 requestDto.getConfirmPassword()
         );
+    }
+
+    @DeleteMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(
+            @PathVariable Long userId,
+            @SessionAttribute(Const.LOGIN_USER) Long loginUserId,
+            @Valid @RequestBody UserDeleteDto.Request requestDto
+    ) {
+
+        userService.deleteUser(userId, loginUserId, requestDto.getCurrentPassword());
     }
 
 }
