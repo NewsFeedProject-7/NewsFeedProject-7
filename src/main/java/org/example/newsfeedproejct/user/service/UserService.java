@@ -55,9 +55,7 @@ public class UserService {
 
     @Transactional
     public UserSearchDetailDto.Response findById(Long userId) {
-        User findById = userRepository.findById(userId).orElseThrow(
-                () -> new GlobalException(UserErrorCode.USER_NOT_FOUND)
-        );
-        return new UserSearchDetailDto.Response(findById);
+        User findById = userRepository.findByIdOrElseThrow(userId);
+        return UserSearchDetailDto.Response.from(findById);
     }
 }
