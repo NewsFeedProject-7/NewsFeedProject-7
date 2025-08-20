@@ -56,9 +56,15 @@ public class UserService {
     }
 
     @Transactional
-    public UserSearchDetailDto.Response findById(Long userId) {
-        User findById = userRepository.findByIdOrElseThrow(userId);
-        return UserSearchDetailDto.Response.from(findById);
+    public UserSearchDetailDto.Response findById(Long userId, Long currentUserId) {
+        User foundUser = userRepository.findByIdOrElseThrow(userId);
+        if (userId.equals(currentUserId)) {
+            return UserSearchDetailDto.Response.from(foundUser);
+        } else {
+            return UserSearchDetailDto.Response.builder()
+                    .nickname(foundUser.getNickname())
+                    .build();
+        }
     }
 
     @Transactional
