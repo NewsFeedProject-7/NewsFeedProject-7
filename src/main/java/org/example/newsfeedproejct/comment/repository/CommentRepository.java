@@ -3,6 +3,7 @@ package org.example.newsfeedproejct.comment.repository;
 import org.example.newsfeedproejct.comment.entity.Comment;
 import org.example.newsfeedproejct.global.exception.GlobalException;
 import org.example.newsfeedproejct.global.exception.errorcode.CommentErrorCode;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,5 +15,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
         return findByIdAndDeletedAtIsNull(commentId).orElseThrow(() -> new GlobalException(CommentErrorCode.COMMENT_NOT_FOUND));
     }
 
-    List<Comment> findAllByBoardIdOrderByCreatedAt(Long boardId);
+    @EntityGraph(attributePaths = {"user", "board"})
+    List<Comment> findByBoardIdAndDeletedAtIsNullOrderByCreatedAt(Long boardId);
 }

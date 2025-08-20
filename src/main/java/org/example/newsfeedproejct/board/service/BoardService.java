@@ -51,7 +51,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public BoardSearchDetailDto.Response findById(Long id) {
         Board findBoard = boardRepository.findByIdOrElseThrow(id);
-        List<CommentSearchDetailDto.Response> comments = commentRepository.findAllByBoardIdOrderByCreatedAt(id)
+        List<CommentSearchDetailDto.Response> comments = commentRepository.findByBoardIdAndDeletedAtIsNullOrderByCreatedAt(id)
                 .stream()
                 .map(CommentSearchDetailDto.Response::from)
                 .toList();
@@ -80,7 +80,7 @@ public class BoardService {
         }
         findBoard.softDelete();
 
-        List<Comment> comments = commentRepository.findAllByBoardIdOrderByCreatedAt(id);
+        List<Comment> comments = commentRepository.findByBoardIdAndDeletedAtIsNullOrderByCreatedAt(id);
         comments.forEach(Comment::softDelete);
     }
 }
