@@ -42,8 +42,8 @@ public class BoardService {
     // 피드 전체 조회
     @Transactional(readOnly = true)
     public Page<BoardSearchDto.Response> searchBoards(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
-        Page<Board> boards = boardRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Board> boards = boardRepository.findAllByDeletedAtIsNull(pageable);
         return boards.map(BoardSearchDto.Response::from);
     }
 
@@ -51,10 +51,11 @@ public class BoardService {
     @Transactional(readOnly = true)
     public BoardSearchDetailDto.Response findById(Long id) {
         Board findBoard = boardRepository.findByIdOrElseThrow(id);
-        List<CommentSearchDetailDto.Response> comments = commentRepository.findByBoardIdAndDeletedAtIsNullOrderByCreatedAt(id)
-                .stream()
-                .map(CommentSearchDetailDto.Response::from)
-                .toList();
+        List<CommentSearchDetailDto.Response> comments =
+                commentRepository.findByBoardIdAndDeletedAtIsNullOrderByCreatedAt(id)
+                        .stream()
+                        .map(CommentSearchDetailDto.Response::from)
+                        .toList();
         return BoardSearchDetailDto.Response.from(findBoard, comments);
     }
 
