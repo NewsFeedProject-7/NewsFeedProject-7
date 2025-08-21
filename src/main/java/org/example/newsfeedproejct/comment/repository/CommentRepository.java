@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
+    @EntityGraph(attributePaths = {"user", "board"})
     Optional<Comment> findByIdAndDeletedAtIsNull(Long id);
     default Comment findByIdOrElseThrow(Long commentId){
         return findByIdAndDeletedAtIsNull(commentId).orElseThrow(() -> new GlobalException(CommentErrorCode.COMMENT_NOT_FOUND));

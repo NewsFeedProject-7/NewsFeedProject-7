@@ -9,8 +9,11 @@ import org.example.newsfeedproejct.board.dto.BoardUpdateDto;
 import org.example.newsfeedproejct.board.service.BoardService;
 import org.example.newsfeedproejct.global.consts.Const;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/boards")
@@ -30,8 +33,10 @@ public class BoardController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<BoardSearchDto.Response> searchBoards(@RequestParam(defaultValue = "0") int page,
-                                                      @RequestParam(defaultValue = "10") int size) {
-        return boardService.searchBoards(page, size);
+                                                      @RequestParam(defaultValue = "10") int size,
+                                                      @RequestParam(required = false) @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                      @RequestParam(required = false) @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        return boardService.searchBoards(page, size, startDate, endDate);
     }
 
     // 피드 단건 조회

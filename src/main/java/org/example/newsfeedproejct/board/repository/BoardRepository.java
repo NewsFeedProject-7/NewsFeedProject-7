@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, Long>, BoardRepositoryCustom {
@@ -30,4 +31,9 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardReposi
 
     @Query("SELECT COALESCE(b.likeCount, 0) FROM Board b WHERE b.id = :boardId")
     long findLikeCountById(@Param("boardId") Long boardId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = "update boards set created_at = :ts where id = :id", nativeQuery = true)
+    void setCreatedAtForTest(@Param("id") Long id, @Param("ts") LocalDateTime ts);
+
 }

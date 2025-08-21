@@ -20,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -40,9 +42,17 @@ public class BoardService {
 
     // 피드 전체 조회
     @Transactional(readOnly = true)
-    public Page<BoardSearchDto.Response> searchBoards(int page, int size) {
+    public Page<BoardSearchDto.Response> searchBoards(int page, int size, LocalDate startDate, LocalDate endDate) {
         Pageable pageable = PageRequest.of(page, size);
-        return boardRepository.findAllWithUserDto(pageable);
+
+        LocalDateTime startAt = (startDate == null) ? null : startDate.atStartOfDay();
+        LocalDateTime endExclusive = (endDate == null) ? null : endDate.plusDays(1).atStartOfDay();
+
+        if (startAt != null && endExclusive != null && !endExclusive.isAfter(startAt)) {
+            throw new GlobalException(BoardErrorCode.INVALID_DATE_RANGE);
+        }
+
+        return boardRepository.findBoardsByDateWithUserDto(startAt, endExclusive, pageable);
     }
 
     // 피드 단건 조회
