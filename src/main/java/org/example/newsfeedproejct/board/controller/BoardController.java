@@ -35,8 +35,9 @@ public class BoardController {
     public Page<BoardSearchDto.Response> searchBoards(@RequestParam(defaultValue = "0") int page,
                                                       @RequestParam(defaultValue = "10") int size,
                                                       @RequestParam(required = false) @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                                      @RequestParam(required = false) @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        return boardService.searchBoards(page, size, startDate, endDate);
+                                                      @RequestParam(required = false) @Valid @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                                                      @SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
+        return boardService.searchBoards(loginUserId, page, size, startDate, endDate);
     }
 
     // 피드 단건 조회
