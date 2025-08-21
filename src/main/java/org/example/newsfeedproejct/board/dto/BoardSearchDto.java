@@ -1,8 +1,7 @@
 package org.example.newsfeedproejct.board.dto;
 
-import lombok.Builder;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
-import org.example.newsfeedproejct.board.entity.Board;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +9,6 @@ import java.time.LocalDateTime;
 public class BoardSearchDto {
 
     @Getter
-    @Builder
     public static class Response {
         private final Long id;
         private final String subject;
@@ -20,16 +18,17 @@ public class BoardSearchDto {
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
 
-        public static Response from(Board board) {
-            return Response.builder()
-                    .id(board.getId())
-                    .subject(board.getSubject())
-                    .content(board.getContent())
-                    .userId(board.getUser().getId())
-                    .nickname(board.getUser().getNickname())
-                    .createdAt(board.getCreatedAt())
-                    .updatedAt(board.getUpdatedAt())
-                    .build();
+        @QueryProjection
+        public Response(Long id, String subject, String content,
+                        Long userId, String nickname,
+                        LocalDateTime createdAt, LocalDateTime updatedAt) {
+            this.id = id;
+            this.subject = subject;
+            this.content = content;
+            this.userId = userId;
+            this.nickname = nickname;
+            this.createdAt = createdAt;
+            this.updatedAt = updatedAt;
         }
     }
 }
