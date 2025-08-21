@@ -29,6 +29,9 @@ public class Comment extends SoftDeletableEntity {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private int likeCount = 0;
+
     public Comment(User user, Board board, String content){
         this.user = user;
         this.board = board;

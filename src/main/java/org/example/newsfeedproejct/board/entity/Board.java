@@ -30,6 +30,9 @@ public class Board extends SoftDeletableEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(nullable = false)
+    private int likeCount = 0;
+
     public Board(String subject, String content, User user) {
         this.subject = subject;
         this.content = content;
