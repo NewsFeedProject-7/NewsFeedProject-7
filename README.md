@@ -43,3 +43,48 @@
   - `@RestControllerAdvice`를 통한 예외의 중앙 처리 및 에러 응답 표준화
 
 ---
+
+## API 명세서
+
+### 사용자 (Users)
+
+| 기능             | METHOD | DOMAIN  | ENDPOINT                                    | Request                     | Response                                                      | 상태코드 |
+|------------------|--------|---------|---------------------------------------------|-----------------------------|---------------------------------------------------------------|----------|
+| 회원가입         | POST   | /signup  | /users              | nickname, email, password, confirmPassword                              | `void`                                                                   | 201      |
+| 로그인           | POST   | /login  | /users               | email, password                                                         | id                                                                       | 200      |
+| 프로필 조회      | GET    | /users  | /users/{userId}      | userId                                                                  | email, nickname, isFollowing                                             | 200      |
+| 유저 수정        | PATCH  | /users  | /users/{userId}      | newNickname, currentPassword, newPassword, confirmPassword              | id, nickname, updatedAt                                                  | 200      |
+| 회원 탈퇴        | DELETE | /users  | /users/{userId}      | -                                                                       | `void`                                                                   | 204      |
+
+---
+
+### 게시글 (Boards)
+
+| 기능             | METHOD | DOMAIN   | ENDPOINT                                    | Request                     | Response                                                      | 상태코드 |
+|------------------|--------|----------|---------------------------------------------|-----------------------------|---------------------------------------------------------------|----------|
+| 게시글 생성      | POST   | /boards  | /boards                                                      | subject, content   | id, subject, content, userId, nickname, createdAt, updatedAt                              | 201      |
+| 게시글 전체조회  | GET    | /boards  | /boards?page=0&size=10&startDate=2025-08-20&endDate=2025-08-21| -                  | [ { id, subject, content, userId, nickname, createdAt, updatedAt } ]                      | 200      |
+| 게시글 단건조회  | GET    | /boards  | /boards/{boardId}                                             | -                  | id, subject, content, userId, nickname, comments:[{id, content, userId, nickname, createdAt, updatedAt }], createdAt, updatedAt | 200      |
+| 게시글 수정      | PATCH  | /boards  | /boards/{boardId}                                             | subject, content   | id, subject, content, userId, nickname, createdAt, updatedAt                              | 200      |
+| 게시글 삭제      | DELETE | /boards  | /boards/{boardId}                                             | -                  | `void`                                                                                    | 204      |
+
+---
+
+### 댓글 (Comments)
+
+| 기능             | METHOD | DOMAIN   | ENDPOINT                                   | Request                      | Response                                                       | 상태코드 |
+|------------------|--------|----------|--------------------------------------------|------------------------------|----------------------------------------------------------------|----------|
+| 댓글 생성        | POST   | /boards  | /boards/{boardId}/comments                  | content       | id, content, userId, nickname, createdAt, updatedAt                                      | 201      |
+| 댓글 수정        | PATCH  | /boards  | /boards/{boardId}/comments/{commentId}      | content       | id, content, userId, nickname, createdAt, updatedAt                                      | 200      |
+| 댓글 삭제        | DELETE | /boards  | /boards/{boardId}/comments/{commentId}      | -             | `void`                                                                                   | 204      |
+
+---
+
+### 팔로우 (Follows)
+
+| 기능             | METHOD | DOMAIN     | ENDPOINT                                  | Request                      | Response                                                    | 상태코드 |
+|------------------|--------|------------|-------------------------------------------|------------------------------|-------------------------------------------------------------|----------|
+| 팔로우            | POST   | /following | /following/{userId}  | -  | `void`                                                                    | 201      |
+| 언팔로우          | DELETE | /following | /following/{userId}  | -  | `void`                                                                    | 204      |
+| 팔로잉&팔로워 목록 조회 | GET    | /following | /following           | - |  followingId: [{userId, nickname}] , followerId: [{userId, nickname}]      | 200      |
+
