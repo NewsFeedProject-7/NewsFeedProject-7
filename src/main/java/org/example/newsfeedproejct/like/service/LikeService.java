@@ -5,6 +5,8 @@ import org.example.newsfeedproejct.board.entity.Board;
 import org.example.newsfeedproejct.board.repository.BoardRepository;
 import org.example.newsfeedproejct.comment.entity.Comment;
 import org.example.newsfeedproejct.comment.repository.CommentRepository;
+import org.example.newsfeedproejct.global.exception.GlobalException;
+import org.example.newsfeedproejct.global.exception.errorcode.LikeErrorCode;
 import org.example.newsfeedproejct.like.dto.LikeToggle;
 import org.example.newsfeedproejct.like.entity.BoardLike;
 import org.example.newsfeedproejct.like.entity.BoardLikeId;
@@ -31,6 +33,11 @@ public class LikeService {
     public LikeToggle.Response toggleBoardLike(Long boardId, Long loginUserId) {
 
         Board findBoard = boardRepository.findByIdOrElseThrow(boardId);
+
+        if (findBoard.isOwnedBy(loginUserId)) {
+            throw new GlobalException(LikeErrorCode.CANNOT_LIKE_OWN_BOARD);
+        }
+
         User findUser = userRepository.findByIdOrElseThrow(loginUserId);
 
         BoardLikeId boardLikeId = BoardLikeId.builder()
@@ -61,6 +68,11 @@ public class LikeService {
     public LikeToggle.Response toggleCommentLike(Long commentId, Long loginUserId) {
 
         Comment findComment = commentRepository.findByIdOrElseThrow(commentId);
+
+        if (findComment.isOwnedBy(loginUserId)) {
+            throw new GlobalException(LikeErrorCode.CANNOT_LIKE_OWN_COMMENT);
+        }
+
         User findUser = userRepository.findByIdOrElseThrow(loginUserId);
 
         CommentLikeId commentLikeId = CommentLikeId.builder()
