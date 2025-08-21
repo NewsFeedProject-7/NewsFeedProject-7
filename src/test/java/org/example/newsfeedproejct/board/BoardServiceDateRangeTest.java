@@ -27,7 +27,7 @@ class BoardServiceDateRangeTest {
         LocalDate end   = LocalDate.of(2025, 8, 21);
 
         GlobalException ex = assertThrows(GlobalException.class,
-                () -> boardService.searchBoards(0, 10, start, end));
+                () -> boardService.searchBoards(0L, 0, 10, start, end));
 
         assertEquals(BoardErrorCode.INVALID_DATE_RANGE, ex.getErrorCode());
     }
@@ -37,14 +37,14 @@ class BoardServiceDateRangeTest {
     @DisplayName("같은 날짜(start==end)는 허용 (해당 날짜 하루만 검색)")
     void same_day_is_allowed() {
         LocalDate day = LocalDate.of(2025, 8, 21);
-        assertDoesNotThrow(() -> boardService.searchBoards(0, 10, day, day));
+        assertDoesNotThrow(() -> boardService.searchBoards(0L, 0, 10, day, day));
     }
 
     @Test
     @Transactional
     @DisplayName("start만 있거나 end만 있어도 예외 없이 동작")
     void null_params_ok() {
-        assertDoesNotThrow(() -> boardService.searchBoards(0, 10, LocalDate.of(2025, 8, 21), null));
-        assertDoesNotThrow(() -> boardService.searchBoards(0, 10, null, LocalDate.of(2025, 8, 21)));
+        assertDoesNotThrow(() -> boardService.searchBoards(0L, 0, 10, LocalDate.of(2025, 8, 21), null));
+        assertDoesNotThrow(() -> boardService.searchBoards(0L, 0, 10, null, LocalDate.of(2025, 8, 21)));
     }
 }

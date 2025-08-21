@@ -42,7 +42,7 @@ public class BoardService {
 
     // 피드 전체 조회
     @Transactional(readOnly = true)
-    public Page<BoardSearchDto.Response> searchBoards(int page, int size, LocalDate startDate, LocalDate endDate) {
+    public Page<BoardSearchDto.Response> searchBoards(Long loginUserId, int page, int size, LocalDate startDate, LocalDate endDate) {
         Pageable pageable = PageRequest.of(page, size);
 
         LocalDateTime startAt = (startDate == null) ? null : startDate.atStartOfDay();
@@ -52,7 +52,7 @@ public class BoardService {
             throw new GlobalException(BoardErrorCode.INVALID_DATE_RANGE);
         }
 
-        return boardRepository.findBoardsByDateWithUserDto(startAt, endExclusive, pageable);
+        return boardRepository.findBoardsByDatePrioritizeFollowingsWithUserDto(loginUserId, startAt, endExclusive, pageable);
     }
 
     // 피드 단건 조회
