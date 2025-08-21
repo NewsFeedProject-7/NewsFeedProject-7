@@ -17,7 +17,6 @@ import org.example.newsfeedproejct.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,9 +41,8 @@ public class BoardService {
     // 피드 전체 조회
     @Transactional(readOnly = true)
     public Page<BoardSearchDto.Response> searchBoards(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Board> boards = boardRepository.findAllByDeletedAtIsNull(pageable);
-        return boards.map(BoardSearchDto.Response::from);
+        Pageable pageable = PageRequest.of(page, size);
+        return boardRepository.findAllWithUserDto(pageable);
     }
 
     // 피드 단건 조회
