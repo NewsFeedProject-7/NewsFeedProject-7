@@ -1,6 +1,7 @@
 package org.example.newsfeedproejct.follow.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeedproejct.follow.dto.FollowListDto;
 import org.example.newsfeedproejct.follow.dto.FollowResponseDto;
 import org.example.newsfeedproejct.follow.service.FollowService;
 import org.example.newsfeedproejct.global.consts.Const;
@@ -31,18 +32,28 @@ public class FollowController {
         followService.unfollow(loginUserId, userId);
     }
 
-    //팔로잉 목록 조회 API
+    //팔로잉, 팔로워 목록 조회 API
     @GetMapping("/following")
     @ResponseStatus(HttpStatus.OK)
-    public List<FollowResponseDto> getFollowingList(@SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
-        //userId가 팔로우하는 목록 가져옴
+    public FollowListDto getFollowingList(@SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
+        // 내가 팔로잉하는 목록
         List<Long> followingIds = followService.getFollowingIds(loginUserId);
-        //가져온 ID목록 사용해서 User정보조회 및 DTO변환
         List<User> followingUsers = userRepository.findAllById(followingIds);
-        return followingUsers.stream()
-                .map(FollowResponseDto::from)
+        List<FollowResponseDto.Response> followees = followingUsers.stream()
+                .map(FollowResponseDto.Response::from)
                 .collect(Collectors.toList());
+
+        // 나를 팔로우하는 목록
+        List<Long> followerIds = followService.getFollowerIds(loginUserId);
+        List<User> followerUsers = userRepository.findAllById(followerIds);
+        List<FollowResponseDto.Response> followers = followerUsers.stream()
+                .map(FollowResponseDto.Response::from)
+                .collect(Collectors.toList());
+
+        // 묶어서 반환
+        return FollowListDto.builder()
+                .followingId(followees)
+                .followerId(followers)
+                .build();
     }
-
-
 }
