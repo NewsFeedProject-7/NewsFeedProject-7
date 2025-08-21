@@ -1,18 +1,15 @@
 package org.example.newsfeedproejct.follow.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.newsfeedproejct.follow.dto.FollowResponseDto;
 import org.example.newsfeedproejct.follow.entity.Follow;
 import org.example.newsfeedproejct.follow.repository.FollowRepository;
 import org.example.newsfeedproejct.global.exception.GlobalException;
 import org.example.newsfeedproejct.global.exception.errorcode.FollowErrorCode;
-import org.example.newsfeedproejct.user.entity.User;
 import org.example.newsfeedproejct.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,6 +52,15 @@ public class FollowService {
         // 조회된 엔티티에서 팔로잉 대상의 ID만 추출하여 리스트로 반환합니다.
         return followingRelations.stream()
                 .map(Follow::getFollowingId)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<Long> getFollowerIds(Long loginUserId) {
+        List<Follow> followingRelations = followRepository.findAllByFollowingId(loginUserId);
+
+        return followingRelations.stream()
+                .map(Follow::getFollowerId)
                 .collect(Collectors.toList());
     }
 }
