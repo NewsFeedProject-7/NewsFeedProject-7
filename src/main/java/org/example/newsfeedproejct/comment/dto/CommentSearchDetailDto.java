@@ -18,6 +18,7 @@ public class CommentSearchDetailDto {
         private final Long userId;
         private final String nickname;
         private final Long boardId;
+        private final Integer likeCount;
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
 
@@ -28,6 +29,7 @@ public class CommentSearchDetailDto {
                     .nickname(comment.getUser().getNickname())
                     .boardId(comment.getBoard().getId())
                     .content(comment.getContent())
+                    .likeCount(comment.getLikeCount())
                     .createdAt(comment.getCreatedAt())
                     .updatedAt(comment.getUpdatedAt())
                     .build();

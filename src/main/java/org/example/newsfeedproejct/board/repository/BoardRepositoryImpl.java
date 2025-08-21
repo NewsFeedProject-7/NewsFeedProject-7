@@ -27,6 +27,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.id,
                         board.subject,
                         board.content,
+                        board.likeCount,
                         user.id,
                         user.nickname,
                         board.createdAt,

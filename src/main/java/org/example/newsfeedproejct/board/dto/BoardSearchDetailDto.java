@@ -17,6 +17,7 @@ public class BoardSearchDetailDto {
         private final Long id;
         private final String subject;
         private final String content;
+        private final Integer likeCount;
         private final Long userId;
         private final String nickname;
         private final LocalDateTime createdAt;
@@ -29,6 +30,7 @@ public class BoardSearchDetailDto {
                     .id(board.getId())
                     .subject(board.getSubject())
                     .content(board.getContent())
+                    .likeCount(board.getLikeCount())
                     .userId(board.getUser().getId())
                     .nickname(board.getUser().getNickname())
                     .comments(comments)
