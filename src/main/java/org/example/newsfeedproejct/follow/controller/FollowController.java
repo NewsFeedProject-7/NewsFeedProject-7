@@ -9,7 +9,6 @@ import org.example.newsfeedproejct.global.consts.Const;
 import org.example.newsfeedproejct.user.entity.User;
 import org.example.newsfeedproejct.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -67,10 +66,9 @@ public class FollowController {
      5. 기념일은 1년, 2년 ... 매 1년마다 반복된다.
     */
     @GetMapping("/friends/anniversaries")
-    public ResponseEntity<List<FollowFriendAnniversaryDto.Response>> getTodayFriendAnniversaries(
+    @ResponseStatus(HttpStatus.OK)
+    public List<FollowFriendAnniversaryDto.Response> getTodayFriendAnniversaries(
             @SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
-        List<FollowFriendAnniversaryDto.Response> anniversaries =
-                followService.getTodayFriendAnniversaries(loginUserId);
-        return ResponseEntity.ok(anniversaries);
+        return followService.getTodayFriendAnniversaries(loginUserId);
     }
 }
