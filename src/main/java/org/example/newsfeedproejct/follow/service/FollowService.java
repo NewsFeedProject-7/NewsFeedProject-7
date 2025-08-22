@@ -1,6 +1,7 @@
 package org.example.newsfeedproejct.follow.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeedproejct.follow.dto.FollowFriendAnniversaryDto;
 import org.example.newsfeedproejct.follow.entity.Follow;
 import org.example.newsfeedproejct.follow.repository.FollowRepository;
 import org.example.newsfeedproejct.global.exception.GlobalException;
@@ -9,6 +10,8 @@ import org.example.newsfeedproejct.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,5 +65,11 @@ public class FollowService {
         return followingRelations.stream()
                 .map(Follow::getFollowerId)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<FollowFriendAnniversaryDto.Response> getTodayFriendAnniversaries(Long loginUserId) {
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        return followRepository.findTodayFriendAnniversaries(loginUserId, today);
     }
 }
