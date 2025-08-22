@@ -10,8 +10,9 @@ import org.example.newsfeedproejct.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,7 +70,18 @@ public class FollowService {
 
     @Transactional(readOnly = true)
     public List<FollowFriendAnniversaryDto.Response> getTodayFriendAnniversaries(Long loginUserId) {
-        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
-        return followRepository.findTodayFriendAnniversaries(loginUserId, today);
+        LocalDateTime today = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+
+        List<FollowFriendAnniversaryDto.Response> friends =
+                followRepository.findTodayFriendAnniversaries(loginUserId, today);
+
+        return friends.stream()
+                .map(dto -> new FollowFriendAnniversaryDto.Response(
+                        dto.getFriendId(),
+                        dto.getNickname(),
+                        ChronoUnit.YEARS.between(dto.getFriendshipDate(), today), // 실제 years 계산
+                        dto.getFriendshipDate()
+                ))
+                .collect(Collectors.toList());
     }
 }
