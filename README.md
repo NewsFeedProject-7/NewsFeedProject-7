@@ -13,10 +13,12 @@
 
 - **회원가입**: 새로운 사용자가 계정을 생성할 수 있습니다.
 - **로그인**: 등록된 사용자가 로그인하여 서비스를 이용하며, 세션 기반 인증을 통해 사용자 상태를 관리합니다.
+- **사용자 정보 관리**: 닉네임, 비밀번호 등 개인 정보를 수정할 수 있습니다.
 - **글쓰기**: 사용자가 새로운 게시물을 작성하고 공유할 수 있습니다.
 - **댓글 남기기**: 다른 사용자의 게시물에 댓글을 달아 소통할 수 있습니다.
 - **팔로우 기능**: 특정 사용자를 팔로우하여 해당 사용자의 활동(새 글 작성 등)을 받아볼 수 있습니다.
-- **사용자 정보 관리**: 닉네임, 비밀번호 등 개인 정보를 수정할 수 있습니다.
+- **좋아요 기능**: 특정 게시물 및 댓글을 좋아요 할 수 있습니다.
+- **친구 기념일 조회 기능**: 다른 사용자와 친구가 된 날짜와 기념일을 조회할 수 있습니다.
 
 ---
 
@@ -50,11 +52,11 @@
 
 | 기능             | METHOD | DOMAIN  | ENDPOINT                                    | Request                     | Response                                                      | 상태코드 |
 |------------------|--------|---------|---------------------------------------------|-----------------------------|---------------------------------------------------------------|----------|
-| 회원가입         | POST   | /signup  | /users              | nickname, email, password, confirmPassword                              | `void`                                                                   | 201      |
-| 로그인           | POST   | /login  | /users               | email, password                                                         | id                                                                       | 200      |
-| 프로필 조회      | GET    | /users  | /users/{userId}      | userId                                                                  | email, nickname, isFollowing                                             | 200      |
-| 유저 수정        | PATCH  | /users  | /users/{userId}      | newNickname, currentPassword, newPassword, confirmPassword              | id, nickname, updatedAt                                                  | 200      |
-| 회원 탈퇴        | DELETE | /users  | /users/{userId}      | -                                                                       | `void`                                                                   | 204      |
+| 회원가입         | POST   | users  | /signup              | nickname, email, password, confirmPassword                              | `void`                                                                   | 201      |
+| 로그인           | POST   | users  | /login               | email, password                                                         | id                                                                       | 200      |
+| 프로필 조회      | GET    | users  | /users/{userId}      |                                                                         | email, nickname, isFollowing                                             | 200      |
+| 유저 수정        | PATCH  | users  | /users/{userId}      | newNickname, currentPassword, newPassword, confirmPassword              | id, nickname, updatedAt                                                  | 200      |
+| 회원 탈퇴        | DELETE | users  | /users/{userId}      | currentPassword                                                         | `void`                                                                   | 204      |
 
 ---
 
@@ -62,11 +64,11 @@
 
 | 기능             | METHOD | DOMAIN   | ENDPOINT                                    | Request                     | Response                                                      | 상태코드 |
 |------------------|--------|----------|---------------------------------------------|-----------------------------|---------------------------------------------------------------|----------|
-| 게시글 생성      | POST   | /boards  | /boards                                                      | subject, content   | id, subject, content, userId, nickname, createdAt, updatedAt                              | 201      |
-| 게시글 전체조회  | GET    | /boards  | /boards?page=0&size=10&startDate=2025-08-20&endDate=2025-08-21| -                  | [ { id, subject, content, userId, nickname, createdAt, updatedAt } ]                      | 200      |
-| 게시글 단건조회  | GET    | /boards  | /boards/{boardId}                                             | -                  | id, subject, content, userId, nickname, comments:[{id, content, userId, nickname, createdAt, updatedAt }], createdAt, updatedAt | 200      |
-| 게시글 수정      | PATCH  | /boards  | /boards/{boardId}                                             | subject, content   | id, subject, content, userId, nickname, createdAt, updatedAt                              | 200      |
-| 게시글 삭제      | DELETE | /boards  | /boards/{boardId}                                             | -                  | `void`                                                                                    | 204      |
+| 게시글 생성      | POST   | boards  | /boards                                                      | subject, content   | id, subject, content, userId, nickname, createdAt, updatedAt                              | 201      |
+| 게시글 전체조회  | GET    | boards  | /boards?page=0&size=10&startDate=2025-08-20&endDate=2025-08-21| -                  | [ { id, subject, content, userId, nickname, createdAt, updatedAt } ]                      | 200      |
+| 게시글 단건조회  | GET    | boards  | /boards/{boardId}                                             | -                  | id, subject, content, userId, nickname, comments:[{id, content, userId, nickname, createdAt, updatedAt }], createdAt, updatedAt | 200      |
+| 게시글 수정      | PATCH  | boards  | /boards/{boardId}                                             | subject, content   | id, subject, content, userId, nickname, createdAt, updatedAt                              | 200      |
+| 게시글 삭제      | DELETE | boards  | /boards/{boardId}                                             | -                  | `void`                                                                                    | 204      |
 
 ---
 
@@ -74,9 +76,9 @@
 
 | 기능             | METHOD | DOMAIN   | ENDPOINT                                   | Request                      | Response                                                       | 상태코드 |
 |------------------|--------|----------|--------------------------------------------|------------------------------|----------------------------------------------------------------|----------|
-| 댓글 생성        | POST   | /boards  | /boards/{boardId}/comments                  | content       | id, content, userId, nickname, createdAt, updatedAt                                      | 201      |
-| 댓글 수정        | PATCH  | /boards  | /boards/{boardId}/comments/{commentId}      | content       | id, content, userId, nickname, createdAt, updatedAt                                      | 200      |
-| 댓글 삭제        | DELETE | /boards  | /boards/{boardId}/comments/{commentId}      | -             | `void`                                                                                   | 204      |
+| 댓글 생성        | POST   | comments  | /boards/{boardId}/comments                  | content       | id, content, userId, nickname, createdAt, updatedAt                                      | 201      |
+| 댓글 수정        | PATCH  | comments  | /boards/{boardId}/comments/{commentId}      | content       | id, content, userId, nickname, createdAt, updatedAt                                      | 200      |
+| 댓글 삭제        | DELETE | comments  | /boards/{boardId}/comments/{commentId}      | -             | `void`                                                                                   | 204      |
 
 ---
 
@@ -84,7 +86,61 @@
 
 | 기능             | METHOD | DOMAIN     | ENDPOINT                                  | Request                      | Response                                                    | 상태코드 |
 |------------------|--------|------------|-------------------------------------------|------------------------------|-------------------------------------------------------------|----------|
-| 팔로우            | POST   | /following | /following/{userId}  | -  | `void`                                                                    | 201      |
-| 언팔로우          | DELETE | /following | /following/{userId}  | -  | `void`                                                                    | 204      |
-| 팔로잉&팔로워 목록 조회 | GET    | /following | /following           | - |  followingId: [{userId, nickname}] , followerId: [{userId, nickname}]      | 200      |
+| 팔로우            | POST   | follows | /following/{userId}  | -  | `void`                                                                    | 201      |
+| 언팔로우          | DELETE | follows | /following/{userId}  | -  | `void`                                                                    | 204      |
+| 팔로잉&팔로워 목록 조회 | GET    | follows | /following           | - |  followingId: [{userId, nickname}] , followerId: [{userId, nickname}]      | 200      |
+| 친구 기념일 조회 | GET    | follows | /friends/anniversaries     | - |  friendId, nickname, years, friendshipDate      | 200      |
+
+---
+
+### 좋아요 (Likes)
+
+| 기능             | METHOD | DOMAIN     | ENDPOINT                                  | Request                      | Response                                                    | 상태코드 |
+|------------------|--------|------------|-------------------------------------------|------------------------------|-------------------------------------------------------------|----------|
+| 게시글 좋아요 토글 | POST   | likes | /boards/{boardId}/likes  | -  | liked, likeCount                                                                    | 200      |
+| 댓글 좋아요 토글   | POST | likes | /comments/{commentId}/likes  | -  | liked, likeCount                                                                    | 200      |
+
+
+---
+
+### Error 응답 예시
+
+```
+{
+    "status": 401,
+    "code": "USER-006",
+    "message": "비밀번호가 올바르지 않습니다.",
+    "path": "/login",
+    "timestamp": "2025-08-22T09:45:58.4236847",
+    "data": null
+}
+```
+
+---
+
+## Quick Start
+
+1) 저장소 클론
+```
+git clone https://github.com/NewsFeedProject-7/NewsFeedProject-7.git newsfeed
+cd newsfeed
+```
+
+2) 로컬 설정 파일 생성
+```
+// src/main/resources/application-local.yml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/[your db name]
+    username: [your name]
+    password: [your password]
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+```
 
