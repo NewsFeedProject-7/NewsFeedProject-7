@@ -1,6 +1,7 @@
 package org.example.newsfeedproejct.follow.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.newsfeedproejct.follow.dto.FollowFriendAnniversaryDto;
 import org.example.newsfeedproejct.follow.dto.FollowListDto;
 import org.example.newsfeedproejct.follow.dto.FollowResponseDto;
 import org.example.newsfeedproejct.follow.service.FollowService;
@@ -8,6 +9,7 @@ import org.example.newsfeedproejct.global.consts.Const;
 import org.example.newsfeedproejct.user.entity.User;
 import org.example.newsfeedproejct.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,5 +57,20 @@ public class FollowController {
                 .followingId(followees)
                 .followerId(followers)
                 .build();
+    }
+
+    /* 친구 기념일 API
+     1. 팔로잉과 팔로워가 둘 다 되어있을 때 친구라고 표현한다.
+     2. 더 나중에 follow 된 createAt 기준으로 기념일을 계산한다.
+     3. 현재 알림 Push 기능을 설정하지 못하기 때문에 클라이언트가 조회하는 API로 대체한다.
+     4. 기념일인 날짜일 때만 값을 보여준다. 기념일인 친구가 없을 땐 [] 반환
+     5. 기념일은 1년, 2년 ... 매 1년마다 반복된다.
+    */
+    @GetMapping("/friends/anniversaries")
+    public ResponseEntity<List<FollowFriendAnniversaryDto.Response>> getTodayFriendAnniversaries(
+            @SessionAttribute(Const.LOGIN_USER) Long loginUserId) {
+        List<FollowFriendAnniversaryDto.Response> anniversaries =
+                followService.getTodayFriendAnniversaries(loginUserId);
+        return ResponseEntity.ok(anniversaries);
     }
 }

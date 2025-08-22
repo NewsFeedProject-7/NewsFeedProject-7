@@ -1,6 +1,7 @@
 package org.example.newsfeedproejct.global.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.example.newsfeedproejct.global.dto.ErrorResponseDto;
 import org.example.newsfeedproejct.global.exception.errorcode.CommonErrorCode;
 import org.example.newsfeedproejct.global.exception.errorcode.ErrorCode;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(GlobalException.class)
@@ -40,7 +42,7 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.toMap(
                         FieldError::getField,
                         DefaultMessageSourceResolvable::getDefaultMessage,
-                        (a,b) -> a,
+                        (a, b) -> a,
                         LinkedHashMap::new
                 ));
 
@@ -76,6 +78,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleException(Exception ex, HttpServletRequest request) {
+        log.error("Unexpected exception occurred at [{}]", request.getRequestURI(), ex);
+        
         return ResponseEntity
                 .status(CommonErrorCode.INTERNAL_ERROR.getHttpStatus())
                 .body(
@@ -89,3 +93,4 @@ public class GlobalExceptionHandler {
     }
 
 }
+
