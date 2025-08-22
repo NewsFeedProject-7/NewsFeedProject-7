@@ -4,18 +4,19 @@ import lombok.Builder;
 import lombok.Getter;
 import org.example.newsfeedproejct.user.entity.User;
 
-@Getter
-@Builder
+
 public class FollowResponseDto {
+    @Getter
+    @Builder
+    public static class Response {
+        private final long userId;
+        private final String nickname;
 
-    private final long userId;
-    private final String nickname;
-
-    public static FollowResponseDto from(User user) {
-        return FollowResponseDto.builder()
-                .userId(user.getId())
-                .nickname(user.getNickname())
-                .build();
+        public static Response from(User user) {
+            return Response.builder()
+                    .userId(user.getId())
+                    .nickname(user.getNickname())
+                    .build();
+        }
     }
-
 }

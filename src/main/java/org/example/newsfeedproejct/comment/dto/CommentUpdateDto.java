@@ -23,9 +23,10 @@ public class CommentUpdateDto {
     @AllArgsConstructor
     public static class Response {
         private final Long id;
-        private final Long userId;
-        private final Long boardId;
         private final String content;
+        private final Long userId;
+        private final String nickname;
+        private final Long boardId;
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
 
@@ -33,6 +34,7 @@ public class CommentUpdateDto {
             return Response.builder()
                     .id(comment.getId())
                     .userId(comment.getUser().getId())
+                    .nickname(comment.getUser().getNickname())
                     .boardId(comment.getBoard().getId())
                     .content(comment.getContent())
                     .createdAt(comment.getCreatedAt())

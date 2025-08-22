@@ -17,10 +17,11 @@ import org.example.newsfeedproejct.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -41,20 +42,28 @@ public class BoardService {
 
     // 피드 전체 조회
     @Transactional(readOnly = true)
-    public Page<BoardSearchDto.Response> searchBoards(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
-        Page<Board> boards = boardRepository.findAll(pageable);
-        return boards.map(BoardSearchDto.Response::from);
+    public Page<BoardSearchDto.Response> searchBoards(Long loginUserId, int page, int size, LocalDate startDate, LocalDate endDate) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        LocalDateTime startAt = (startDate == null) ? null : startDate.atStartOfDay();
+        LocalDateTime endExclusive = (endDate == null) ? null : endDate.plusDays(1).atStartOfDay();
+
+        if (startAt != null && endExclusive != null && !endExclusive.isAfter(startAt)) {
+            throw new GlobalException(BoardErrorCode.INVALID_DATE_RANGE);
+        }
+
+        return boardRepository.findBoardsByDatePrioritizeFollowingsWithUserDto(loginUserId, startAt, endExclusive, pageable);
     }
 
     // 피드 단건 조회
     @Transactional(readOnly = true)
     public BoardSearchDetailDto.Response findById(Long id) {
         Board findBoard = boardRepository.findByIdOrElseThrow(id);
-        List<CommentSearchDetailDto.Response> comments = commentRepository.findAllByBoardIdOrderByCreatedAt(id)
-                .stream()
-                .map(CommentSearchDetailDto.Response::from)
-                .toList();
+        List<CommentSearchDetailDto.Response> comments =
+                commentRepository.findByBoardIdAndDeletedAtIsNullOrderByCreatedAt(id)
+                        .stream()
+                        .map(CommentSearchDetailDto.Response::from)
+                        .toList();
         return BoardSearchDetailDto.Response.from(findBoard, comments);
     }
 
@@ -80,7 +89,7 @@ public class BoardService {
         }
         findBoard.softDelete();
 
-        List<Comment> comments = commentRepository.findAllByBoardIdOrderByCreatedAt(id);
+        List<Comment> comments = commentRepository.findByBoardIdAndDeletedAtIsNullOrderByCreatedAt(id);
         comments.forEach(Comment::softDelete);
     }
 }

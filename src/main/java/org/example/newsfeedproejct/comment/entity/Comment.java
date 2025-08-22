@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.example.newsfeedproejct.board.entity.Board;
 import org.example.newsfeedproejct.global.entity.SoftDeletableEntity;
 import org.example.newsfeedproejct.user.entity.User;
+import org.springframework.util.ObjectUtils;
 
 @Getter
 @Entity
@@ -29,10 +30,18 @@ public class Comment extends SoftDeletableEntity {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private int likeCount = 0;
+
     public Comment(User user, Board board, String content){
         this.user = user;
         this.board = board;
         this.content = content;
+    }
+
+    public boolean isOwnedBy(Long userId) {
+
+        return ObjectUtils.nullSafeEquals(this.user.getId(), userId);
     }
 
     public void updateContent(String content) {

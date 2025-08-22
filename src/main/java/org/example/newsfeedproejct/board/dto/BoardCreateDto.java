@@ -35,7 +35,6 @@ public class BoardCreateDto {
         private final String nickname;
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
-        private final LocalDateTime deletedAt;
 
         public static Response from(Board board) {
             return Response.builder()
@@ -46,7 +45,6 @@ public class BoardCreateDto {
                     .nickname(board.getUser().getNickname())
                     .createdAt(board.getCreatedAt())
                     .updatedAt(board.getUpdatedAt())
-                    .deletedAt(board.getDeletedAt())
                     .build();
         }
     }

@@ -17,11 +17,11 @@ public class BoardSearchDetailDto {
         private final Long id;
         private final String subject;
         private final String content;
+        private final Integer likeCount;
         private final Long userId;
         private final String nickname;
         private final LocalDateTime createdAt;
         private final LocalDateTime updatedAt;
-        private final LocalDateTime deletedAt;
 
         private final List<CommentSearchDetailDto.Response> comments;
 
@@ -30,12 +30,12 @@ public class BoardSearchDetailDto {
                     .id(board.getId())
                     .subject(board.getSubject())
                     .content(board.getContent())
+                    .likeCount(board.getLikeCount())
                     .userId(board.getUser().getId())
                     .nickname(board.getUser().getNickname())
                     .comments(comments)
                     .createdAt(board.getCreatedAt())
                     .updatedAt(board.getUpdatedAt())
-                    .deletedAt(board.getDeletedAt())
                     .build();
         }
     }
